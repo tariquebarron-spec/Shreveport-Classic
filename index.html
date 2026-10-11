@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shreveport Classic | Independence Stadium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;600;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0A1A3C;          /* trust-blue replaces near-black as the dominant chrome */
+    --ink:#0A1A3C;            /* navy 900 - header, dark bands, footer */
+    --ink-2:#0F2550;          /* navy 800 - raised surfaces on navy */
+    --navy-700:#16356E;
+    --line-d:#22386B;         /* hairlines on navy */
+    --white:#fff;
+    --rule:#D6D6D6;
+    --rule-2:#E6E6E6;
+    --muted:#4F5B72;          /* blue-tinted secondary text, 6.8:1 on white */
+    --amber:#F5A524;          /* single high-salience CTA colour, 8.4:1 on navy */
+    --amber-deep:#D98A06;
+    --orange:#F5A524;
+    --gold:#FFC61E;           /* heritage gold, wordmark only */
+    --price-red:#C8102E;      /* reserved for price / savings figures only */
+    --green:#137A3D;          /* availability + confirmation */
+    --crimson:#16356E;        /* legacy alias -> now navy, red is no longer an accent */
+    --content:880px;
+    --rail:280px;
+    --gap:41px;
+    --maxw:1201px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:#fff;color:#0E1726;font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:20px;line-height:30px;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3,h4,.mada{font-family:'Mada','IBM Plex Sans',sans-serif;font-weight:700;line-height:1}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+  .skip{position:absolute;left:-9999px}
+
+  /* ================= UTILITY BAR ================= */
+  .util{background:var(--ink);color:#fff}
+  .util .inner{max-width:var(--maxw);margin:0 auto;padding:0 20px;height:34px;display:flex;align-items:center;justify-content:flex-end;gap:28px}
+  .util a{display:inline-flex;align-items:center;gap:8px;font-family:'Mada',sans-serif;font-weight:700;font-size:13px;
+    letter-spacing:.06em;text-transform:uppercase;color:#fff}
+  .util a:hover{color:var(--orange)}
+  .util svg{width:16px;height:16px;fill:currentColor}
+
+  /* ================= HEADER ================= */
+  .site-head{position:relative;height:93px;background:var(--ink)}
+  .site-head .swoosh{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .head-inner{position:relative;z-index:3;max-width:var(--maxw);margin:0 auto;padding:0 20px;height:93px;display:flex;align-items:center}
+  .logo{flex:none;color:#fff;line-height:.88;padding-bottom:4px}
+  .logo .l1,.logo .l2{font-family:'Mada',sans-serif;font-weight:900;font-size:27px;letter-spacing:-.025em;text-transform:lowercase}
+  nav.primary{margin-left:auto;display:flex;align-items:stretch;height:83px;align-self:flex-end}
+  nav.primary a{display:flex;align-items:center;padding:3px 20px 0 21px;position:relative;
+    font-family:'Mada',sans-serif;font-weight:700;font-size:16px;color:#0E1726}
+  nav.primary a+a::before{content:"";position:absolute;left:0;top:24px;bottom:24px;width:1px;background:#CBCBCB}
+  nav.primary a:hover{color:var(--navy-700)}
+  nav.primary a.on{background:#EDEDED}
+  nav.primary a.on::after{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);width:28px;height:2px;background:#3A3A3A}
+  .hsearch{align-self:flex-end;height:83px;display:flex;align-items:center;padding:3px 4px 0 20px}
+  .hsearch svg{width:22px;height:22px;fill:#0E1726}
+  .navtoggle{display:none;margin-left:auto;background:transparent;border:1px solid #9a9a9a;color:#0E1726;
+    font-family:'Mada',sans-serif;font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:10px 16px;cursor:pointer}
+
+  /* ---- provisional-name tag ---- */
+  .pending{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;vertical-align:middle;
+    font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:10px;line-height:1;letter-spacing:.11em;
+    text-transform:uppercase;padding:4px 7px;border:1px solid rgba(255,255,255,.4);color:rgba(255,255,255,.82);
+    border-radius:3px;text-decoration:none}
+  .pending i{font-style:normal;font-weight:700}
+  .pending.on-light{border-color:#B9C3D6;color:#5A6782}
+  .pending.lg{font-size:12px;padding:6px 10px;letter-spacing:.13em}
+  .pending.sm{font-size:9px;padding:3px 6px;letter-spacing:.1em;margin-top:6px}
+  .logo,.flogo{display:flex;flex-direction:column;align-items:flex-start}
+
+  /* ================= HERO ================= */
+  .hero{position:relative;aspect-ratio:1440/500;min-height:320px;background:#0A1A3C;display:grid;place-items:center;overflow:hidden;isolation:isolate}
+  .hero .bg{position:absolute;inset:0;background:linear-gradient(180deg,#1B3568 0%,#0A1A3C 60%,#061128 100%)}
+  .hero .chev{position:absolute;inset:0;opacity:.28;
+    background:repeating-linear-gradient(115deg,#061128 0 58px,#102346 58px 116px)}
+  .hero .beam{position:absolute;left:50%;top:-40%;width:120%;height:180%;transform:translateX(-50%);
+    background:conic-gradient(from 200deg at 50% 0%, transparent 0deg 18deg, rgba(255,255,255,.05) 18deg 20deg,
+      transparent 20deg 38deg, rgba(255,255,255,.05) 38deg 40deg, transparent 40deg 58deg,
+      rgba(255,255,255,.05) 58deg 60deg, transparent 60deg 180deg)}
+  .hero .inner{position:relative;z-index:2;text-align:center;padding:30px 20px;width:100%}
+  .hero .pres{font-family:'Mada',sans-serif;font-weight:700;font-size:13px;letter-spacing:.26em;text-transform:uppercase;color:#C9C9C9;line-height:1}
+  .hero .mark{font-family:'Mada',sans-serif;font-weight:900;font-size:clamp(42px,7.1vw,102px);line-height:.88;
+    letter-spacing:-.022em;text-transform:uppercase;color:#fff;margin-top:16px}
+  .hero .mark span{color:var(--gold)}
+  .hero .rule{width:92px;height:4px;background:var(--amber);margin:20px auto 0}
+  .hero .matchups{margin-top:20px;display:flex;flex-direction:column;gap:7px;align-items:center}
+  .hero .matchups div{font-family:'Mada',sans-serif;font-weight:700;font-size:clamp(14px,1.72vw,25px);
+    letter-spacing:.015em;text-transform:uppercase;color:#fff;line-height:1.1}
+  .hero .matchups i{font-style:normal;color:#8E8E8E;padding:0 6px}
+  .hero .when{margin-top:22px;font-family:'Mada',sans-serif;font-weight:900;font-size:clamp(19px,2.9vw,42px);
+    letter-spacing:.005em;text-transform:uppercase;color:#fff;line-height:1}
+  .hero .where{margin-top:9px;font-family:'Mada',sans-serif;font-weight:700;font-size:13px;letter-spacing:.2em;
+    text-transform:uppercase;color:#BDBDBD;line-height:1}
+
+  /* ================= TITLE BAND ================= */
+  .titleband{background:var(--ink);color:#fff;padding:54px 0 160px}
+  .titleband .wrap{max-width:var(--maxw);padding:0 50px}
+  .titleband h1{font-size:61px;line-height:61px;font-weight:700;letter-spacing:-.004em}
+  .titleband p{margin-top:20px;font-size:20px;line-height:30px;color:#D9D9D9;max-width:56ch}
+
+  /* ================= MAIN GRID ================= */
+  .main .wrap{max-width:var(--maxw);padding:0 20px;display:grid;overflow:hidden;
+    grid-template-columns:minmax(0,var(--content)) var(--rail);gap:var(--gap);align-items:start}
+  .content{padding:60px 30px 70px;max-width:var(--content)}
+  .content h2{font-size:39px;line-height:39px;text-transform:uppercase;margin-bottom:22px}
+  .content h2.mt{margin-top:70px}
+  .content p{margin-bottom:20px}
+  .content p:last-child{margin-bottom:0}
+  .uline{font-weight:700;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+  .uline:hover{color:var(--navy-700)}
+  .subhead{display:inline-block;font-weight:700;font-size:20px;line-height:30px;margin:44px 0 14px;
+    text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+  ul.perks{list-style:none;margin:18px 0 24px}
+  ul.perks li{position:relative;padding-left:44px;margin-bottom:16px}
+  ul.perks li::before{content:"•";position:absolute;left:14px;top:-1px;font-size:22px}
+  ul.perks b{font-weight:700}
+
+  /* ---- schedule tables ---- */
+  .daywrap{margin-top:34px}
+  .daywrap h3{font-size:24px;line-height:1;text-transform:uppercase;padding-bottom:12px;border-bottom:3px solid var(--ink);
+    display:flex;align-items:baseline;gap:14px}
+  .daywrap h3 span{font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:600;line-height:1;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  table.sched{width:100%;table-layout:fixed;border-collapse:collapse;margin-bottom:8px}
+  table.sched td.e{word-wrap:break-word;overflow-wrap:anywhere}
+  table.sched tr{border-bottom:1px solid var(--rule-2)}
+  table.sched tr.key{background:#EEF3FB}
+  table.sched td{padding:13px 12px 13px 0;vertical-align:top;font-size:18px;line-height:26px}
+  table.sched td.t{width:168px;white-space:nowrap;font-family:'Mada',sans-serif;font-weight:700;font-size:16px;letter-spacing:.02em;padding-top:15px}
+  table.sched tr.key td.t{color:var(--navy-700)}
+  table.sched td.e b{font-weight:600}
+  table.sched td.e small{display:block;font-size:15px;line-height:22px;color:var(--muted);margin-top:1px}
+  .bandlist{margin-top:7px;font-size:15px;line-height:24px;color:var(--muted);overflow-wrap:anywhere}
+  .schedlede{color:var(--muted);font-size:17px;line-height:26px;margin-bottom:6px}
+  table.sched tr.feat{background:#FAFBFD}
+  table.sched tr.feat td{padding-top:16px;padding-bottom:17px}
+  table.sched td.e em{display:block;font-style:normal;font-weight:700;font-size:16px;line-height:24px;margin-top:2px}
+  table.sched td.e p{font-size:16px;line-height:25px;color:#33415C;margin-top:6px}
+
+  /* ---- accordion ---- */
+  .acc{margin-top:56px;border:1px solid var(--rule)}
+  .acc .bar{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+    background:linear-gradient(90deg,#0A1A3C 0%,#0A1A3C 46%,#1E407F 100%);color:#fff;
+    font-family:'Mada',sans-serif;font-weight:700;font-size:20px;cursor:pointer;user-select:none}
+  .acc .bar svg{width:20px;height:20px;fill:#fff;transition:transform .25s ease}
+  .acc.closed .bar svg{transform:rotate(180deg)}
+  .acc .body{padding:22px 24px 26px}
+  .acc.closed .body{display:none}
+  .acc ul{list-style:none}
+  .acc li{position:relative;padding-left:44px;margin-bottom:16px}
+  .acc li:last-child{margin-bottom:0}
+  .acc li::before{content:"•";position:absolute;left:14px;top:-1px;font-size:22px}
+  .acc a{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+  .acc a:hover{color:var(--navy-700)}
+
+  /* ================= INFO RAIL ================= */
+  .rail{position:sticky;top:16px;margin-top:-116px;z-index:6;background:#fff;border:1px solid var(--rule);
+    padding:21px 21px 6px;overflow:hidden}
+  .rail::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.85;
+    background:repeating-linear-gradient(118deg,transparent 0 30px,#F0F0F0 30px 31px),
+               repeating-linear-gradient(62deg,transparent 0 30px,#F4F4F4 30px 31px)}
+  .rail>*{position:relative}
+  .buy{display:block;text-align:center;border-radius:999px;padding:17px 18px;color:#0A1A3C;
+    background:linear-gradient(180deg,#FFBE4D 0%,var(--amber) 55%);box-shadow:0 7px 18px rgba(10,26,60,.26);
+    font-family:'Mada',sans-serif;font-weight:700;font-size:16px;letter-spacing:.12em;text-transform:uppercase;line-height:1}
+  .buy:hover{background:var(--amber-deep)}
+  .rail .price{display:flex;align-items:center;gap:10px}
+  .rail .price span:not(.dollar){font-size:15px;line-height:20px;color:var(--muted)}
+  .dollar{display:inline-grid;place-items:center;width:28px;height:28px;flex:none;border-radius:50%;
+    background:var(--price-red);color:#fff;font-family:'Mada',sans-serif;font-weight:700;font-size:17px;line-height:1}
+  .pkgline{display:flex;align-items:center;gap:12px}
+  .pkgline .dollar{width:32px;height:32px;font-size:19px}
+  .onsale{display:inline-flex;align-items:center;gap:8px;color:var(--green);font-weight:600}
+  .onsale::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--green);flex:none}
+  .rail .item{padding:18px 0 16px;border-bottom:1px solid var(--rule)}
+  .rail .item:last-child{border-bottom:0}
+  .rail dt{font-family:'Mada',sans-serif;font-weight:700;font-size:16px;line-height:16px;text-transform:uppercase}
+  .rail dd{margin-top:6px;font-size:18px;line-height:24px}
+  .rail dd.sub{margin-top:2px;font-size:15px;line-height:21px;color:var(--muted)}
+  .rail dd.link{display:flex;align-items:center;gap:9px;font-size:16px;line-height:22px}
+  .rail dd.link i{font-style:normal;color:#9B9B9B;font-weight:700;font-size:15px;letter-spacing:-2px}
+  .rail dd.link a{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+  .rail dd.link a:hover{color:var(--navy-700)}
+
+  /* ================= DARK BANDS ================= */
+  .dark{background:var(--ink);color:#fff}
+  .band-head{display:flex;align-items:center;gap:12px;padding:20px 0 18px}
+  .band-head svg.ic{width:22px;height:22px;fill:#fff;flex:none}
+  .band-head h2{font-family:'Mada',sans-serif;font-weight:700;font-size:20px;line-height:1}
+  .band-head .arrows{margin-left:auto;display:flex;gap:20px;font-family:'Mada',sans-serif;font-weight:700;
+    font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#A8A8A8}
+  .band-head .arrows span{cursor:pointer}
+  .band-head .arrows span:hover{color:var(--orange)}
+  .ecards{display:grid;grid-template-columns:repeat(5,1fr);border-left:1px solid var(--line-d);border-top:1px solid var(--line-d)}
+  .ecard{border-right:1px solid var(--line-d);border-bottom:1px solid var(--line-d);display:flex;flex-direction:column}
+  .ecard .thumb{aspect-ratio:16/9;position:relative;overflow:hidden;border-bottom:1px solid var(--line-d)}
+  .ecard .thumb .g{position:absolute;inset:0}
+  .ecard .thumb .sh{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent 60%)}
+  .ecard .thumb .lbl{position:absolute;left:14px;bottom:11px;font-family:'Mada',sans-serif;font-weight:900;
+    font-size:19px;line-height:1;text-transform:uppercase;color:#fff}
+  .ecard .cb{padding:16px 18px 20px;display:flex;flex-direction:column;flex:1}
+  .ecard .d{font-size:14px;line-height:20px;color:#A5A5A5}
+  .ecard h3{font-family:'Mada',sans-serif;font-weight:700;font-size:19px;line-height:23px;margin:4px 0 8px}
+  .ecard p{font-size:15px;line-height:22px;color:#B4B4B4;flex:1}
+  .ecard .pill{margin-top:18px;align-self:flex-start;border:1px solid var(--amber);color:var(--amber);border-radius:999px;padding:11px 22px;
+    font-family:'Mada',sans-serif;font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;line-height:1}
+  .ecard .pill:hover{background:var(--amber);color:#0A1A3C}
+
+  /* calendar */
+  .calwrap{padding:34px 0 10px}
+  .cal{width:372px;max-width:100%;background:#131313;border:1px solid var(--line-d);padding:18px 20px 22px}
+  .cal .ch{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .cal .ch h3{font-family:'Mada',sans-serif;font-weight:700;font-size:18px;line-height:1}
+  .cal .ch .pn{margin-left:auto;display:flex;gap:14px;color:#9E9E9E;font-weight:700;cursor:pointer}
+  .cal table{width:100%;border-collapse:collapse;text-align:center}
+  .cal th{font-family:'Mada',sans-serif;font-weight:700;font-size:14px;color:#fff;padding:6px 0 10px;border-bottom:1px solid var(--line-d)}
+  .cal td{font-size:14px;color:#C7C7C7;padding:9px 0;border-bottom:1px solid #1E1E1E}
+  .cal td u{text-decoration:underline;text-underline-offset:3px;color:#fff;font-weight:600}
+  .cal td.today{background:var(--amber);color:#0A1A3C;font-weight:700}
+  .cal td.today u{color:#0A1A3C}
+
+  /* news */
+  .news{padding-bottom:46px}
+  .newsitem{padding:16px 0;border-top:1px solid var(--line-d)}
+  .newsitem .d{font-size:13px;color:#9E9E9E;line-height:1.4}
+  .newsitem h3{font-family:'Mada',sans-serif;font-weight:700;font-size:19px;line-height:25px;margin-top:3px}
+  .newsitem h3:hover{color:var(--orange)}
+  .newsitem p{font-size:15px;line-height:22px;color:#A9A9A9;margin-top:4px}
+  .viewall{margin-left:auto;font-family:'Mada',sans-serif;font-weight:700;font-size:14px;letter-spacing:.1em;
+    text-transform:uppercase;color:#fff}
+  .viewall:hover{color:var(--orange)}
+
+  /* ================= EAT LOCAL ================= */
+  .eat{background:#F7F9FC;border-top:1px solid var(--rule-2);border-bottom:1px solid var(--rule-2);padding:58px 0 64px}
+  .eat .top{max-width:760px}
+  .eat h2{font-size:39px;line-height:39px;text-transform:uppercase}
+  .eat .kick{font-family:'Mada',sans-serif;font-weight:700;font-size:14px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--navy-700);margin-bottom:12px}
+  .eat .lede{margin-top:18px;font-size:19px;line-height:29px;color:#33415C}
+  .eatgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}
+  .eatcard{background:#fff;border:1px solid var(--rule);display:flex;flex-direction:column;transition:.22s}
+  .eatcard:hover{border-color:var(--navy-700);box-shadow:0 10px 26px rgba(10,26,60,.10);transform:translateY(-3px)}
+  .eatcard .strip{height:6px}
+  .eatcard .in{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+  .eatcard h3{font-family:'Mada',sans-serif;font-weight:700;font-size:21px;line-height:1.1;text-transform:uppercase}
+  .eatcard p{margin-top:8px;font-size:16px;line-height:25px;color:#4A5873;flex:1}
+  .eatcard .slots{margin-top:16px;display:flex;flex-direction:column;gap:7px}
+  .eatcard .slot{height:34px;border:1px dashed #C9D2E2;background:#FBFCFE;display:flex;align-items:center;
+    padding:0 11px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#93A0B8;
+    font-family:'Mada',sans-serif;font-weight:700}
+  .hoods{margin-top:34px;border-top:1px solid var(--rule);padding-top:22px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .hoods .lbl{font-family:'Mada',sans-serif;font-weight:700;font-size:14px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin-right:6px}
+  .hood{background:#fff;border:1px solid var(--rule);padding:8px 15px;font-family:'Mada',sans-serif;
+    font-weight:700;font-size:14px;letter-spacing:.03em}
+  .hood:hover{border-color:var(--navy-700);color:var(--navy-700)}
+  .eatcta{margin-top:34px;background:var(--ink);color:#fff;padding:28px 32px;display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+  .eatcta h3{font-family:'Mada',sans-serif;font-weight:700;font-size:24px;line-height:1.15}
+  .eatcta p{font-size:16px;line-height:24px;color:#C4D0E4;margin-top:6px;max-width:58ch}
+  .eatcta a{margin-left:auto;flex:none;background:var(--amber);color:#0A1A3C;border-radius:999px;padding:15px 28px;
+    font-family:'Mada',sans-serif;font-weight:700;font-size:15px;letter-spacing:.12em;text-transform:uppercase;line-height:1}
+  .eatcta a:hover{background:var(--amber-deep)}
+  @media (max-width:980px){.eatgrid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:620px){.eatgrid{grid-template-columns:1fr}.eatcta a{margin-left:0}}
+
+  /* ================= PARTNERS ================= */
+  .partners{background:#fff;padding:42px 0 46px}
+  .partners .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+  .partners h2{font-size:39px;line-height:39px}
+  .partners .pn{display:flex;align-items:center;gap:24px;font-family:'Mada',sans-serif;font-weight:700;
+    font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#6E6E6E}
+  .partners .pn span{cursor:pointer}
+  .partners .pn span:hover{color:var(--navy-700)}
+  .partners .pn .div{width:1px;height:28px;background:var(--rule)}
+  .plogos{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+  .plogo{height:84px;display:grid;place-items:center;text-align:center;padding:0 10px;border:1px dashed var(--rule);
+    font-family:'Mada',sans-serif;font-weight:700;font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:#8C8C8C}
+
+  /* ================= MAP + FOOTER ================= */
+  .fmap{position:relative;height:300px;overflow:hidden;
+    background:repeating-linear-gradient(0deg,#E2E2E2 0 1px,transparent 1px 52px),
+               repeating-linear-gradient(90deg,#E2E2E2 0 1px,transparent 1px 64px),#EFEFEF}
+  .fmap .road{position:absolute;left:52%;top:0;bottom:0;width:26px;background:var(--amber);opacity:.9}
+  .fmap .road2{position:absolute;left:0;right:0;top:46%;height:12px;background:#D2D2D2}
+  .fmap .pinrow{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:18px;z-index:2}
+  .fmap .dot{width:20px;height:20px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#fff;border:4px solid #111;flex:none}
+  .fmap .card{background:rgba(14,14,14,.94);color:#fff;padding:20px 24px;max-width:380px}
+  .fmap .card b{font-family:'Mada',sans-serif;font-weight:700;font-size:19px;line-height:1}
+  .fmap .card div{font-size:16px;line-height:24px;color:#D4D4D4;margin-top:6px}
+  .fmap .card a{display:inline-flex;align-items:center;gap:9px;margin-top:10px;font-family:'Mada',sans-serif;
+    font-weight:700;font-size:13px;letter-spacing:.11em;text-transform:uppercase;color:var(--orange)}
+  .fmap .curve{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:70px}
+
+  .ftop{background:#fff;padding:34px 0 38px}
+  .ftop .wrap{display:flex;align-items:center;gap:44px;flex-wrap:wrap}
+  .flogo{line-height:.88}
+  .flogo .l1,.flogo .l2{font-family:'Mada',sans-serif;font-weight:900;font-size:32px;letter-spacing:-.025em;text-transform:lowercase}
+  .faddr{font-size:18px;line-height:28px}
+  .faddr b{font-weight:700}
+  .fsoc{display:flex;gap:13px;margin-top:12px}
+  .fsoc a{width:42px;height:42px;border:1px solid #C9C9C9;border-radius:50%;display:grid;place-items:center;
+    color:var(--ink);transition:background .18s,border-color .18s,color .18s}
+  .fsoc a svg{width:18px;height:18px;fill:currentColor;display:block}
+  .fsoc a:hover{background:var(--ink);border-color:var(--ink);color:#fff}
+  .proud{margin-left:auto;display:flex;align-items:center;gap:26px}
+  .proud .t{font-family:'Mada',sans-serif;font-weight:700;font-size:16px;line-height:19px;text-transform:uppercase;
+    border-bottom:2px solid var(--amber);padding-bottom:9px}
+  .proud .sch{font-family:'Mada',sans-serif;font-weight:900;font-size:17px;line-height:21px;letter-spacing:.01em;text-align:center}
+  .proud .sch small{display:block;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:11px;
+    letter-spacing:.14em;color:#777;margin-top:3px}
+
+  .fbot{background:var(--ink);color:#fff;padding:46px 0 26px}
+  .fcols{display:grid;grid-template-columns:repeat(5,1fr);gap:30px}
+  .fcols h4{font-family:'Mada',sans-serif;font-weight:700;font-size:15px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:15px}
+  .fcols a{display:block;font-size:15px;line-height:22px;color:#C2C2C2;margin-bottom:10px}
+  .fcols a:hover{color:var(--orange)}
+  .legal{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-d);display:flex;align-items:center;gap:10px;
+    flex-wrap:wrap;font-size:14px;line-height:22px;color:#9A9A9A}
+  .legal a{color:#9A9A9A;text-decoration:none}
+  .legal a:hover{color:#fff}
+
+  /* floating chip */
+  .chip{position:fixed;right:24px;bottom:22px;z-index:40;background:var(--ink);color:#fff;border-radius:999px;
+    padding:14px 22px;font-family:'Mada',sans-serif;font-weight:700;font-size:15px;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+  .chip:hover{background:var(--navy-700)}
+
+  @media (max-width:1180px){
+    .main .wrap{grid-template-columns:1fr;gap:0}
+    .rail{position:static;margin:-130px 30px 0;max-width:520px}
+    .content{padding-top:44px}
+    .ecards{grid-template-columns:repeat(2,1fr)}
+    .fcols{grid-template-columns:repeat(3,1fr)}
+    .plogos{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (max-width:900px){
+    nav.primary,.hsearch{display:none}
+    .navtoggle{display:block}
+    .site-head{background:#fff}
+    .logo{color:#0E1726}
+    .hero{aspect-ratio:auto;padding:56px 0}
+    .titleband{padding:40px 0 140px}
+    .titleband .wrap{padding:0 30px}
+    .titleband h1{font-size:40px;line-height:42px}
+    .content h2{font-size:30px;line-height:32px}
+    body{font-size:18px;line-height:28px}
+  }
+  @media (max-width:620px){
+    .ecards{grid-template-columns:1fr}
+    .cal{width:100%}
+    .proud{flex-wrap:wrap;gap:16px}
+    .fmap .card{max-width:none}
+    .fmap .pinrow{width:calc(100% - 40px);left:20px;transform:translateY(-50%)}
+    .legal span[style]{margin-left:0!important}
+    .fcols{grid-template-columns:1fr 1fr}
+    table.sched td.t{width:104px;font-size:14px}
+    table.sched td{font-size:16px;line-height:24px}
+    .content{padding-left:20px;padding-right:20px}
+    .rail{margin-left:20px;margin-right:20px}
+    .util .inner{justify-content:center;gap:18px}
+    .proud{margin-left:0}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#details">Skip to content</a>
+
+<!-- ================= UTILITY ================= -->
+<div class="util">
+  <div class="inner">
+    <a href="#signup">Newsletter Sign-Up <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg></a>
+    <a href="#">Vendor Application</a>
+    <a href="#">Media</a>
+  </div>
+</div>
+
+<!-- ================= HEADER ================= -->
+<header class="site-head">
+  <svg class="swoosh" viewBox="0 0 1440 93" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M1440,0 L500,0 C352,0 326,93 96,93 L1440,93 Z" fill="#ffffff"/>
+  </svg>
+  <div class="head-inner">
+    <a class="logo" href="#top">
+      <div class="l1">shreveport</div>
+      <div class="l2">classic</div>
+      <span class="pending sm"><i>*</i> Name pending</span>
+    </a>
+    <nav class="primary">
+      <a class="on" href="#details">Event &amp; Tickets</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#visit">Plan Your Visit</a>
+      <a href="#weekend">Weekend</a>
+      <a href="#eatlocal">Eat Local</a>
+      <a href="#partners">Sponsors &amp; Donors</a>
+      <a href="#contact">Connect</a>
+    </nav>
+    <div class="hsearch"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg></div>
+    <button class="navtoggle">Menu</button>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="bg"></div><div class="chev"></div><div class="beam"></div>
+  <div class="inner">
+    <div class="pres">Presented by the Shreveport Classic Foundation</div>
+    <div class="mark">Shreveport <span>Classic</span></div>
+    <div style="margin-top:12px"><span class="pending lg"><i>*</i> Official name pending</span></div>
+    <div class="rule"></div>
+    <div class="matchups">
+      <div>Arkansas&ndash;Pine Bluff <i>vs.</i> Grambling State</div>
+      <div>Southern <i>vs.</i> Jackson State</div>
+    </div>
+    <div class="when">October 23, 2027</div>
+    <div class="where">Independence Stadium &middot; Shreveport, Louisiana</div>
+  </div>
+</section>
+
+<!-- ================= TITLE BAND ================= -->
+<section class="titleband">
+  <div class="wrap">
+    <h1>Shreveport Classic <span class="pending lg" style="vertical-align:middle;margin-left:10px"><i>*</i> Official name pending</span></h1>
+    <p>Shreveport Classic presented by the Shreveport Classic Foundation will take place at Independence Stadium on October 23, 2027 at 12 PM.</p>
+  </div>
+</section>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+  <div class="wrap">
+
+    <div class="content" id="details">
+      <h2>Event Details</h2>
+      <p>Inaugural Shreveport Classic presented by the Shreveport Classic Foundation between four storied football programs, the University of Arkansas at Pine Bluff and Grambling State University followed by Southern University and Jackson State University, on October 23, 2027, at Independence Stadium.</p>
+      <p>Held the week before the State Fair, the Classic anchors four days of vendor fairs, forums, parades, parties and band showcases across Shreveport&ndash;Bossier.</p>
+      <p>Get your tickets today!</p>
+      <a class="uline" href="#signup">Sign up for more information &gt;&gt;</a>
+
+      <div class="subhead">Shreveport Classic Fan Experience: Ticket &amp; Hotel Packages</div>
+      <p class="pkgline"><span class="dollar">$</span> Ticket and hotel packages available &mdash; pricing to be announced.</p>
+      <ul class="perks">
+        <li><b>Official event tickets</b> &ndash; Both games, all sections available</li>
+        <li><b>Hotels near the stadium</b> &ndash; 1&ndash;3 night stays downtown and along I&ndash;20</li>
+        <li><b>Exclusive perks</b> &ndash; Black Tie Benefit Banquet and alumni party access (21+)</li>
+        <li><b>Flexible payment options</b> &ndash; Book now, pay over time</li>
+      </ul>
+      <a class="uline" href="#">Purchase your travel package today &gt;&gt;</a>
+
+      <h2 class="mt" id="schedule">Complete Weekend Schedule</h2>
+      <p class="schedlede">Four days across Shreveport&ndash;Bossier, in order. Featured events carry venue and details.</p>
+
+      <div class="daywrap">
+        <h3>Thursday <span>October 21</span></h3>
+        <table class="sched">
+          <tr class="feat">
+            <td class="t">9:00 AM &ndash; 6:00 PM</td>
+            <td class="e"><b>Boardwalk Vendor Fair</b>
+              <em>Louisiana Boardwalk, Bossier City</em>
+              <p>Three full days of Black-owned retail, food and services line the Boardwalk. More than a hundred vendors, live DJ sets and a family zone make this the daytime hub of Classic Weekend, free and open to the public from Thursday morning through Saturday evening.</p>
+            </td>
+          </tr>
+          <tr><td class="t">5:00 PM</td><td class="e">Social / Networking Event</td></tr>
+          <tr><td class="t">Evening</td><td class="e">Puff &amp; Paint<small>Time to be confirmed</small></td></tr>
+        </table>
+      </div>
+
+      <div class="daywrap">
+        <h3>Friday <span>October 22</span></h3>
+        <table class="sched">
+          <tr><td class="t">9:00 AM &ndash; 6:00 PM</td><td class="e">Boardwalk Vendor Fair<small>Day two &middot; Louisiana Boardwalk</small></td></tr>
+          <tr><td class="t">10:00 AM</td><td class="e">STEM Fair</td></tr>
+          <tr><td class="t">10:00 AM</td><td class="e">College Fair</td></tr>
+          <tr><td class="t">11:00 AM</td><td class="e">Stadium Press Conference</td></tr>
+          <tr><td class="t">12:00 PM</td><td class="e">Coaches Lunch</td></tr>
+          <tr><td class="t">1:00 PM</td><td class="e">Legal Clinic / Forum</td></tr>
+          <tr><td class="t">5:00 PM</td><td class="e">Legal Clinic / Forum</td></tr>
+          <tr><td class="t">6:00 PM</td><td class="e">Financial Literacy Forum</td></tr>
+          <tr><td class="t">7:00 PM</td><td class="e">City Council Pep Rally</td></tr>
+          <tr><td class="t">7:00 PM</td><td class="e">First-Time Homebuyers Forum</td></tr>
+          <tr class="feat">
+            <td class="t">8:00 PM</td>
+            <td class="e"><b>Black Tie Benefit Banquet</b>
+              <em>Shreveport Convention Center</em>
+              <p>The signature evening of Classic Weekend. Alumni, sponsors and civic leaders gather for dinner, scholarship presentations and the induction of this year's Classic honorees. Proceeds support student scholarships at each of the four participating institutions.</p>
+            </td>
+          </tr>
+          <tr class="feat">
+            <td class="t">8:00 PM</td>
+            <td class="e"><b>Step Show &amp; Stroll Off</b>
+              <em>Downtown Shreveport</em>
+              <p>Divine Nine chapters from across the region bring their best to the Classic stage for a judged step and stroll competition with cash prizes. Hosted by a national comedian and followed immediately by the Classic Comedy Show at nine.</p>
+            </td>
+          </tr>
+          <tr><td class="t">9:00 PM</td><td class="e">Comedy Show</td></tr>
+          <tr><td class="t">10:00 PM</td><td class="e">Parties &amp; Socials<small>Multiple venues downtown</small></td></tr>
+        </table>
+      </div>
+
+      <div class="daywrap">
+        <h3>Saturday <span>October 23 &middot; Game Day</span></h3>
+        <table class="sched">
+          <tr class="feat">
+            <td class="t">7:00 AM</td>
+            <td class="e"><b>Stadium Parking Lot Tailgate</b>
+              <em>Independence Stadium Lots</em>
+              <p>The official tailgate opens at seven and stays open between games. Grills, alumni tents, a kids zone and a vendor village stretch across the lots, giving fans a place to land for the full day of football and a reason to stay between kickoffs.</p>
+            </td>
+          </tr>
+          <tr class="feat">
+            <td class="t">8:00 AM</td>
+            <td class="e"><b>Boardwalk Parade</b>
+              <em>Louisiana Boardwalk to Independence Stadium</em>
+              <p>The Classic parade steps off at eight with high school and college bands, dance lines, Greek organizations, floats and city officials. The route runs the Boardwalk and ends at the stadium gates just as the tailgate lots hit full stride.</p>
+            </td>
+          </tr>
+          <tr><td class="t">9:00 AM &ndash; 6:00 PM</td><td class="e">Boardwalk Vendor Fair<small>Final day &middot; Louisiana Boardwalk</small></td></tr>
+          <tr><td class="t">11:00 AM</td><td class="e">WUCU High School Band Showcase</td></tr>
+          <tr><td class="t">11:00 AM</td><td class="e">Stadium Pep Rally</td></tr>
+          <tr><td class="t">11:00 AM</td><td class="e">Rodeo</td></tr>
+          <tr class="key"><td class="t">12:00 PM</td><td class="e"><b>Game 1 &mdash; UAPB vs. Grambling State</b><small>Independence Stadium</small></td></tr>
+          <tr class="key"><td class="t">6:00 PM</td><td class="e"><b>Game 2 &mdash; Southern vs. Jackson State</b><small>Independence Stadium &middot; kickoff time to be confirmed</small></td></tr>
+          <tr><td class="t">10:00 PM</td><td class="e">Young, Wild &amp; Free Party</td></tr>
+          <tr><td class="t">10:00 PM</td><td class="e">Dukes &amp; Boots Party</td></tr>
+          <tr><td class="t">10:00 PM</td><td class="e">All White Alumni Party</td></tr>
+        </table>
+      </div>
+
+      <div class="daywrap">
+        <h3>Sunday <span>October 24</span></h3>
+        <table class="sched">
+          <tr><td class="t">10:00 AM</td><td class="e">High School Senior Band &amp; Cheer Tryouts</td></tr>
+          <tr><td class="t">10:30 AM</td><td class="e">Alumni Brunch</td></tr>
+          <tr class="feat">
+            <td class="t">1:00 PM</td>
+            <td class="e"><b>BandWave College Showcase</b>
+              <em>Independence Stadium</em>
+              <p>Eight marching programs close the weekend on one field. No clock and no score &mdash; just bands, back to back, until the stadium empties.</p>
+              <div class="bandlist">UAPB M4 &middot; GSU World Famed &middot; TxSU Ocean of Soul &middot; LU Marching Pride<br>JSU Sonic Boom &middot; Mississippi Valley &middot; Alcorn &middot; Miles College</div>
+            </td>
+          </tr>
+          <tr><td class="t">4:00 PM</td><td class="e">Gospel Concert</td></tr>
+        </table>
+      </div>
+
+      <div class="acc" id="visit">
+        <div class="bar">Related Links <svg viewBox="0 0 24 24"><path d="M12 8l-8 8h16z"/></svg></div>
+        <div class="body">
+          <ul>
+            <li><a href="#">Bag Check &amp; Stadium Policy</a></li>
+            <li><a href="#">Directions &amp; Parking</a></li>
+            <li><a href="#">Host Hotels &amp; Room Blocks</a></li>
+            <li><a href="#">Vendor Application &mdash; Boardwalk Vendor Fair</a></li>
+            <li><a href="#">Press Release: Shreveport Classic brings four SWAC programs to Independence Stadium</a></li>
+            <li><a href="#">Book your shuttle from downtown host hotels</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <a class="buy" href="#">Buy Tickets</a>
+      <dl>
+        <div class="item"><dt>Packages</dt><dd class="price"><span class="dollar">$</span><span>Ticket + hotel &middot; both games</span></dd></div>
+        <div class="item"><dt>Date</dt><dd>October 23, 2027</dd></div>
+        <div class="item"><dt>Lots Open</dt><dd>7:00 AM</dd></div>
+        <div class="item"><dt>Doors Open</dt><dd>10:30 AM</dd></div>
+        <div class="item"><dt>Game 1</dt><dd>12:00 PM</dd><dd class="sub">UAPB vs. Grambling State</dd></div>
+        <div class="item"><dt>Game 2</dt><dd>6:00 PM</dd><dd class="sub">Southern vs. Jackson State</dd></div>
+        <div class="item"><dt>On Sale</dt><dd><span class="onsale">On Sale Now</span></dd></div>
+        <div class="item"><dt>Transportation</dt><dd class="link"><i>&gt;&gt;</i><a href="#">View Transportation Options</a></dd></div>
+        <div class="item"><dt>Premium Suites</dt><dd class="link"><i>&gt;&gt;</i><a href="#">View Premium Options</a></dd></div>
+      </dl>
+    </aside>
+
+  </div>
+</div>
+
+<!-- ================= WEEKEND CARDS ================= -->
+<section class="dark" id="weekend">
+  <div class="wrap">
+    <div class="band-head">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8a2 2 0 0 1 2-2z"/></svg>
+      <h2>Classic Weekend</h2>
+      <div class="arrows"><span>&laquo; Prev</span><span>Next &raquo;</span></div>
+    </div>
+    <div class="ecards">
+      <div class="ecard">
+        <div class="thumb"><div class="g" style="background:linear-gradient(135deg,#FFC861,#D08E12 58%,#2C1E05)"></div><div class="sh"></div><div class="lbl">Vendor Fair</div></div>
+        <div class="cb">
+          <div class="d">Oct 21&ndash;23, 2027</div>
+          <h3>Boardwalk Vendor Fair</h3>
+          <p>Three days of Black-owned retail, food and services on the Louisiana Boardwalk.</p>
+          <a class="pill" href="#schedule">More Info</a>
+        </div>
+      </div>
+      <div class="ecard">
+        <div class="thumb"><div class="g" style="background:linear-gradient(135deg,#43608F,#132A55 62%,#06102A)"></div><div class="sh"></div><div class="lbl">Black Tie</div></div>
+        <div class="cb">
+          <div class="d">Oct 22, 2027 &middot; 8:00 PM</div>
+          <h3>Benefit Banquet</h3>
+          <p>Scholarship dinner and honoree induction at the Shreveport Convention Center.</p>
+          <a class="pill" href="#schedule">More Info</a>
+        </div>
+      </div>
+      <div class="ecard">
+        <div class="thumb"><div class="g" style="background:linear-gradient(135deg,#F5A524,#9A6305 56%,#241703)"></div><div class="sh"></div><div class="lbl">Game 1</div></div>
+        <div class="cb">
+          <div class="d">Oct 23, 2027 &middot; 12:00 PM</div>
+          <h3>UAPB vs. Grambling State</h3>
+          <p>The doubleheader opens with two SWAC West rivals at high noon.</p>
+          <a class="pill" href="#">Buy Tickets</a>
+        </div>
+      </div>
+      <div class="ecard">
+        <div class="thumb"><div class="g" style="background:linear-gradient(135deg,#2E5BA8,#12274F 60%,#060E22)"></div><div class="sh"></div><div class="lbl">Game 2</div></div>
+        <div class="cb">
+          <div class="d">Oct 23, 2027 &middot; 6:00 PM</div>
+          <h3>Southern vs. Jackson State</h3>
+          <p>The nightcap under the lights at Independence Stadium.</p>
+          <a class="pill" href="#">Buy Tickets</a>
+        </div>
+      </div>
+      <div class="ecard">
+        <div class="thumb"><div class="g" style="background:linear-gradient(135deg,#5E8FD1,#1B3566 60%,#081330)"></div><div class="sh"></div><div class="lbl">BandWave</div></div>
+        <div class="cb">
+          <div class="d">Oct 24, 2027 &middot; 1:00 PM</div>
+          <h3>BandWave College Showcase</h3>
+          <p>Eight marching programs on one field to close out Classic Weekend.</p>
+          <a class="pill" href="#schedule">More Info</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- calendar -->
+    <div class="calwrap">
+      <div class="cal">
+        <div class="ch">
+          <svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zM5 9h14v10H5z"/></svg>
+          <h3>October 2027</h3>
+          <div class="pn"><span>&laquo;</span><span>&raquo;</span></div>
+        </div>
+        <table>
+          <tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr>
+          <tr><td></td><td></td><td></td><td></td><td></td><td>1</td><td>2</td></tr>
+          <tr><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>
+          <tr><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td></tr>
+          <tr><td>17</td><td>18</td><td>19</td><td>20</td><td><u>21</u></td><td><u>22</u></td><td class="today"><u>23</u></td></tr>
+          <tr><td><u>24</u></td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td></tr>
+          <tr><td>31</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================= EAT LOCAL ================= -->
+<section class="eat" id="eatlocal">
+  <div class="wrap">
+    <div class="top">
+      <div class="kick">Community &middot; Shreveport&ndash;Bossier</div>
+      <h2>Eat Local</h2>
+      <p class="lede">Classic Weekend fills four days and a lot of tables. This is where visiting fans, alumni and bands find the neighborhood kitchens, pitmasters and family restaurants that make Shreveport&ndash;Bossier worth the trip &mdash; so the money that comes into town for the Classic stays in town.</p>
+    </div>
+
+    <div class="eatgrid">
+      <div class="eatcard">
+        <div class="strip" style="background:var(--amber)"></div>
+        <div class="in">
+          <h3>Soul Food &amp; Southern</h3>
+          <p>Sunday plates any day of the week &mdash; smothered meats, greens, cornbread and the family kitchens that have fed this city for generations.</p>
+          <div class="slots"><div class="slot">Listing available</div><div class="slot">Listing available</div><div class="slot">Listing available</div></div>
+        </div>
+      </div>
+      <div class="eatcard">
+        <div class="strip" style="background:#8A3B12"></div>
+        <div class="in">
+          <h3>Barbecue &amp; Smokehouse</h3>
+          <p>Ribs, links, brisket and the roadside pits that run on their own schedule. Bring cash and get there before they sell out.</p>
+          <div class="slots"><div class="slot">Listing available</div><div class="slot">Listing available</div><div class="slot">Listing available</div></div>
+        </div>
+      </div>
+      <div class="eatcard">
+        <div class="strip" style="background:#1E6B8C"></div>
+        <div class="in">
+          <h3>Seafood &amp; Cajun</h3>
+          <p>Stuffed shrimp, catfish plates, gumbo and boils. Northwest Louisiana does this its own way &mdash; worth tasting the difference.</p>
+          <div class="slots"><div class="slot">Listing available</div><div class="slot">Listing available</div><div class="slot">Listing available</div></div>
+        </div>
+      </div>
+      <div class="eatcard">
+        <div class="strip" style="background:#C8102E"></div>
+        <div class="in">
+          <h3>Breakfast &amp; Brunch</h3>
+          <p>Before the parade, after the party. Biscuits, grits, omelets and the counters that open early on game day.</p>
+          <div class="slots"><div class="slot">Listing available</div><div class="slot">Listing available</div><div class="slot">Listing available</div></div>
+        </div>
+      </div>
+      <div class="eatcard">
+        <div class="strip" style="background:#16356E"></div>
+        <div class="in">
+          <h3>Sweets, Coffee &amp; Bakeries</h3>
+          <p>Pies, pralines, snowballs and the coffee shops where alumni end up sitting for two hours longer than they planned.</p>
+          <div class="slots"><div class="slot">Listing available</div><div class="slot">Listing available</div><div class="slot">Listing available</div></div>
+        </div>
+      </div>
+      <div class="eatcard">
+        <div class="strip" style="background:#5B3E8C"></div>
+        <div class="in">
+          <h3>Late Night &amp; After Party</h3>
+          <p>Kitchens still open when the Fifth Quarter lets out and the 10 PM parties wind down. Wings, tacos, burgers, po'boys.</p>
+          <div class="slots"><div class="slot">Listing available</div><div class="slot">Listing available</div><div class="slot">Listing available</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hoods">
+      <span class="lbl">Browse by area</span>
+      <a class="hood" href="#">Downtown</a>
+      <a class="hood" href="#">Shreveport Common</a>
+      <a class="hood" href="#">Highland</a>
+      <a class="hood" href="#">Line Avenue</a>
+      <a class="hood" href="#">Queensborough</a>
+      <a class="hood" href="#">Stadium &amp; Fairgrounds</a>
+      <a class="hood" href="#">Bossier &amp; the Boardwalk</a>
+    </div>
+
+    <div class="eatcta">
+      <div>
+        <h3>Own a restaurant in Shreveport&ndash;Bossier?</h3>
+        <p>Get your kitchen in front of every visitor coming in for Classic Weekend. Tell us about your place and we'll add you to the guide.</p>
+      </div>
+      <a href="#signup">Get Listed</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LATEST NEWS ================= -->
+<section class="dark news">
+  <div class="wrap">
+    <div class="band-head">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 4h12a2 2 0 0 1 2 2v12a2 2 0 0 0 2 2H5a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1zm2 4v3h8V8zm0 5v2h8v-2zm0 4v2h5v-2z"/></svg>
+      <h2>Latest News</h2>
+      <a class="viewall" href="#">&raquo; View All</a>
+    </div>
+    <div class="newsitem">
+      <div class="d">Posted Oct 2, 2026</div>
+      <h3>Shreveport Classic announces inaugural HBCU doubleheader for October 2027</h3>
+      <p>Four SWAC programs will meet at Independence Stadium the week before the State Fair, anchoring a four-day celebration across Shreveport&ndash;Bossier.</p>
+    </div>
+    <div class="newsitem">
+      <div class="d">Posted Sep 18, 2026</div>
+      <h3>BandWave College Showcase to bring eight marching programs to Shreveport</h3>
+      <p>The Sunday showcase closes Classic Weekend with no clock and no score &mdash; just bands, back to back.</p>
+    </div>
+    <div class="newsitem">
+      <div class="d">Posted Sep 4, 2026</div>
+      <h3>Vendor applications open for the Boardwalk Vendor Fair</h3>
+      <p>More than a hundred vendor slots are available across three days on the Louisiana Boardwalk.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PARTNERS ================= -->
+<section class="partners" id="partners">
+  <div class="wrap">
+    <div class="top">
+      <h2>Official Sponsors and Donors</h2>
+      <div class="pn"><span>&laquo; Prev</span><div class="div"></div><span>Next &raquo;</span></div>
+    </div>
+    <div class="plogos">
+      <div class="plogo">Presenting Sponsor</div>
+      <div class="plogo">Major Partner</div>
+      <div class="plogo">Major Partner</div>
+      <div class="plogo">Official Hotel</div>
+      <div class="plogo">Media Partner</div>
+      <div class="plogo">City of Shreveport</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MAP ================= -->
+<div class="fmap">
+  <div class="road2"></div><div class="road"></div>
+  <div class="pinrow">
+    <div class="dot"></div>
+    <div class="card">
+      <b>Independence Stadium</b>
+      <div>3301 Pershing Blvd, Shreveport, Louisiana 71109</div>
+      <a href="#">&gt;&gt; Get Directions</a>
+    </div>
+  </div>
+  <svg class="curve" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M1440,70 L1440,30 C1100,30 980,70 600,70 L0,70 Z" fill="#ffffff"/>
+  </svg>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<div class="ftop">
+  <div class="wrap">
+    <div class="flogo">
+      <div class="l1">shreveport</div>
+      <div class="l2">classic</div>
+      <span class="pending sm on-light"><i>*</i> Name pending</span>
+    </div>
+    <div class="faddr">
+      <div>3301 Pershing Blvd <b>-</b> Shreveport, Louisiana 71109</div>
+      <div>(318) 000-0000</div>
+      <div class="fsoc"><a href="#" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.12 5.32H17V2.14A26.11 26.11 0 0 0 14.26 2C11.54 2 9.68 3.66 9.68 6.7v2.62H6.61v3.56h3.07V22h3.68v-9.12h3.06l.46-3.56h-3.52V7.05c0-1.03.28-1.73 1.76-1.73z"/></svg></a><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.12 1.39C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.39 2.12.66.66 1.33 1.08 2.12 1.39.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.12-1.39.66-.66 1.08-1.33 1.39-2.12.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.39-2.12C21.32 1.35 20.65.93 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0z"/><path d="M12 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84M12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"/><circle cx="18.41" cy="5.59" r="1.44"/></svg></a><a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12z"/></svg></a></div>
+    </div>
+    <div class="proud">
+      <div class="t">Proud<br>Host Of</div>
+      <div class="sch">UAPB<small>Golden Lions</small></div>
+      <div class="sch">GRAMBLING<small>Tigers</small></div>
+      <div class="sch">SOUTHERN<small>Jaguars</small></div>
+      <div class="sch">JACKSON ST.<small>Tigers</small></div>
+    </div>
+  </div>
+</div>
+
+<footer class="fbot" id="contact">
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <h4>Event &amp; Tickets</h4>
+        <a href="#">Buy Tickets</a><a href="#">Ticket Information</a><a href="#">Seating Charts</a><a href="#">Premium Suites</a><a href="#">Group Sales</a>
+      </div>
+      <div>
+        <h4>Plan Your Visit</h4>
+        <a href="#">Directions &amp; Parking</a><a href="#">Host Hotels</a><a href="#">Bag Check &amp; Policy</a><a href="#">Accessibility</a><a href="#eatlocal">Eat Local Guide</a>
+      </div>
+      <div>
+        <h4>Weekend</h4>
+        <a href="#schedule">Full Schedule</a><a href="#">Boardwalk Vendor Fair</a><a href="#">Black Tie Banquet</a><a href="#">BandWave Showcase</a><a href="#">Parade Route</a>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <a href="#">Scholarship Fund</a><a href="#">STEM &amp; College Fair</a><a href="#">Forums &amp; Clinics</a><a href="#eatlocal">Local Restaurants</a><a href="#">Supplier Diversity</a><a href="#">Volunteer</a>
+      </div>
+      <div>
+        <h4>Connect</h4>
+        <a href="#signup">Newsletter Sign-Up</a><a href="#">Vendor Application</a><a href="#">Media Credentials</a><a href="#">Sponsorship</a><a href="#">Contact Us</a>
+      </div>
+    </div>
+    <div class="legal" id="signup">
+      <span>Copyright &copy; 2027 Shreveport Classic.</span><span>|</span><a href="#">Site Map</a><span>|</span><a href="#">Privacy Policy</a><span>|</span><a href="#">Accessibility</a><span>|</span><a href="#">Cookie Settings</a>
+      <span style="margin-left:auto">Draft layout &mdash; dates, times and pricing are not final.</span>
+    </div>
+  </div>
+</footer>
+
+<a class="chip" href="#contact">Have a Question?</a>
+
+<script>
+  document.querySelector('.acc .bar').addEventListener('click', function(){
+    this.parentElement.classList.toggle('closed');
+  });
+</script>
+</body>
+</html>
